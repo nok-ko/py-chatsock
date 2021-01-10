@@ -1,5 +1,5 @@
 from aiohttp import web
-import socketio, random, os, asyncio, importlib, pathlib
+import socketio, random, os, asyncio, importlib, pathlib, argparse
 import asyncio
 
 sio = socketio.AsyncServer()
@@ -58,10 +58,19 @@ app.router.add_get('/', index)
 # rather than imported as a library in another Python file.
 if __name__ == '__main__':
 
+    # Get command-line arguments, so we can specify the port 
+    # the HTTP server should use.
+    parser = argparse.ArgumentParser(description="An HTTP/WebSockets chatbox!")
+
+    parser.add_argument("port", type=int, action='store_const', default='7777')
+
+    args = parser.parse_args()
+
+
     # Look through the `bots` directory and load every python module.
     bot_modules = []
     for filename in os.listdir(pathlib.Path.cwd().joinpath("bots")):
         if filename not in ("__pycache__"):
             bot_modules.append(importlib.import_module(f"bots.{filename[:-3]}"))
 
-    web.run_app(app)
+    web.run_app(app, port=args.port)
