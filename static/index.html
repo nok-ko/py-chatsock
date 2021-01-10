@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<title>Chatsock Welcomes You!</title>
+		<link rel="stylesheet" type="text/css" href="static/style.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<script src="static/socket.io.dev.js"></script>
+	<!-- <script src="/miq.js"></script> -->
+
+	<body>
+		<svg class="pingpong"><circle fill="red" r="8" cy="8" id="ping" cx="8"></circle><circle r="8" cx="8" cy="28" fill="lime" id="pong"></circle></svg>
+		<div class="grid-container">
+			<ul id="messages"></ul>
+			<form class="chat" action="">
+				<input id="m" type="text" autocomplete="off" autofocus
+					placeholder='Type something cute'/>
+				<button>Send</button>
+			</form>
+		</div>
+
+		<!-- JS at the end to make sure we can manipulate the DOM -->
+		<script src='static/script.js?{{checksum}}'></script>
+	</body>
+</html>

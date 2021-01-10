@@ -1,0 +1,165 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	height: 100%;
+	font: 13px Helvetica, Arial;
+}
+
+html,
+body {
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+form.chat {
+	background: #000;
+	padding: 3px;
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 0.05fr;
+}
+
+form.chat> input {
+	border: 0;
+	padding: 10px;
+	margin-right: .5%;
+}
+
+form.chat > button {
+	background: rgb(130, 224, 255);
+	border: none;
+	padding: 10px;
+	cursor: pointer;
+}
+
+#messages {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow-y: auto;
+}
+
+#messages li {
+	display: grid;
+	grid-template-columns: fit-content(100%) fit-content(100%);
+	column-gap: 1ch;
+	padding: 5px 10px;
+}
+
+#messages li:nth-child(odd) {
+	background: #eee;
+}
+
+.grid-container {
+	size: 100%;
+	height: 100%;
+	display: grid;
+	grid-template-rows: 1fr 0.05fr;
+}
+
+.nick .msg {
+	align-self: start;
+}
+
+.msg {
+	overflow-wrap: break-word;
+}
+
+.superchat {
+	font-family: monospace;
+	font-weight: 600;
+	font-style: italic;
+}
+
+
+form.nick {
+	margin-top: 1ch;
+	display: grid;
+	grid-template-columns: fit-content(100%) fit-content(100%);
+	grid-column-gap: 1ch;
+	column-gap: 1ch;
+}
+
+form.nick > button {
+	width: inherit;
+}
+
+form.nick > input {
+	width: 30ch;
+	/* height: 1ch; */
+}
+
+form.nick > p.nickerror {
+	color: red;
+	font-style: oblique;
+	font-family: monospace;
+	height: 1ch;
+}
+
+.pingpong {
+	/* for now... */
+	display: none;
+	/* ^^^ remember to remove later ^^^ */
+	position: absolute;
+	margin: 0px;
+	right: 2px;
+	width: 16px;
+	height: 36px;
+	margin-right: 2px;
+	margin-top: 2px;
+	background-color: transparent;
+}
+
+.hide {
+	display: none;
+}
+
+@keyframes fade {
+	0% {
+		opacity:0;
+	}
+	100% {
+		opacity:100;
+	}
+}
+
+.fade {
+	animation-name: fade;
+	animation-fill-mode: forwards;
+	animation-duration: 0.1s;
+}
+
+.popup {
+	position: fixed;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+
+
+
+	background-color: white;
+	border-radius: 3px;
+	width: 50%;
+	min-width: 300px;
+	height: 10%;
+	min-height: 120px;
+	padding:10px;
+	box-sizing: border-box;
+
+	-webkit-box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.33);
+	-moz-box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.33);
+	box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.33);
+}
+
+h1 {
+	font-size: x-large;
+}
