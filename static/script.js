@@ -51,35 +51,35 @@ function clearMessageBox() {
  * Parse a command message and call the appropriate command function.
  * @param  {String} msg - A command message, starting with an exclamation point.
  */
-function parseCommand(msg) {
-	// #region Commands that are later referenced in `commands` object:
+// function parseCommand(msg) {
+// 	// #region Commands that are later referenced in `commands` object:
 
-	function renick(args) {
-		newNick = args.join(' ') // we gotta send a string, not an array
-		console.log('renicking to', newNick)
-		socket.emit('new-nick', newNick, (reply) => {
-			if (reply === true) { // the server likes our new nick
-				console.log('=>[good nick]')
-			} else {
-				console.error(`=>[bad nick] '${reply}'`)
-			}
-		})
-	}
+// 	function renick(args) {
+// 		newNick = args.join(' '); // we gotta send a string, not an array
+// 		console.log('renicking to', newNick);
+// 		socket.emit('new-nick', newNick, (reply) => {
+// 			if (reply === true) { // the server likes our new nick
+// 				console.log('=>[good nick]');
+// 			} else {
+// 				console.error(`=>[bad nick] '${reply}'`);
+// 			}
+// 		});
+// 	}
 
-	// #endregion
+// 	// #endregion
 
-	const commands = {
-		'nick': renick,
-		'renick': renick, // aliases, eh
-	}
-	let args = msg.slice(1).split(' ')
-	console.log(args[0], args[0] in commands)
-	if (args[0] in commands){
-		commands[args[0]](args.slice(1))
-	} else {
-		displayChat('', `"!${args[0]}" is not a valid command!`, true)
-	}
-}
+// 	const commands = {
+// 		'nick': renick,
+// 		'renick': renick, // aliases, eh
+// 	};
+// 	let args = msg.slice(1).split(' ');
+// 	console.log(args[0], args[0] in commands);
+// 	if (args[0] in commands){
+// 		commands[args[0]](args.slice(1));
+// 	} else {
+// 		displayChat('', `"!${args[0]}" is not a valid command!`, true);
+// 	}
+// }
 
 // #region CHAT STUFF
 
