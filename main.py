@@ -8,6 +8,8 @@ import sys
 import socketio
 from aiohttp import web
 
+#TODO: Better variable names
+
 sio = socketio.AsyncServer() # sio - the SocketIO Server
 app = web.Application()
 sio.attach(app)
@@ -48,8 +50,8 @@ async def on_chat_message(sid, msg):
 
     for bot in bot_modules:
         # We allow bots without an on_chat method, hence getattr.
-        if getattr(bot, 'on_chat'):
-            await bot.on_chat(sid, msg)
+        async with sio.session(sid) as session:
+            await bot.on_chat(sid, msg, session)
 
 @sio.event
 def disconnect(sid):
@@ -108,7 +110,7 @@ if __name__ == '__main__':
     bot_modules = []
     for filename in os.listdir(pathlib.Path.cwd().joinpath("bots")):
         # *Not at all* a reliable check for python files. Good enough, however.
-        if ".py" in filename: 
+        if ".py" in filename and filename != 'bot.py': 
             bot_module = importlib.import_module(f"bots.{filename[:-3]}")
             
             # If the bot has a logger associated with it, set the level to
@@ -119,11 +121,11 @@ if __name__ == '__main__':
 
             # Each bot must have a `create()` function that accepts the SocketIO
             # server instance as an argument.
-            create_bot = getattr(bot_module, 'create')
-            if create_bot:
-                bot = create_bot(sio)
+            bot_class = getattr(bot_module, 'bot')
+            if bot_class:
+                bot = bot_class(sio)
                 bot_modules.append(bot)
             else:
-                logger.error(f"Bot in {filename} has no create function!")
+                logger.error(f"Bot in {filename} has no `bot` variable!")
 
     web.run_app(app, port=args.port)
