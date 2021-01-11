@@ -8,14 +8,20 @@ import logging
 #TODO: Better variable names
 
 def shift_by(cleartext, shift):
-	"""Performs a Caesar shift on the cleartext string provided.
-	Returns the shifted string.
-	`cleartext` – must be a string or collection of characters, the input text.
-	`shift` – must be an integer, the amount to shift the text.
+	"""Perform a Caesar shift on the cleartext string provided.
+	If characters in the string are not in the English alphabet,
+	it skips them, keeping them as they are in the original message.
+
+	Args:
+		cleartext (str): The input text.
+		shift (int): The amount to shift the text.
+
+	Returns:
+		str: The shifted text
 	"""
 	shift = shift % 26
 	shifted = alphabet[shift:] + alphabet[:shift]
-	
+
 	ciphertext = ""
 	cleartext = cleartext.lower()
 	for character in cleartext:
@@ -23,12 +29,18 @@ def shift_by(cleartext, shift):
 			position = alphabet.index(character)
 			character = shifted[position]
 		ciphertext = ciphertext + character
-	
+
 	return ciphertext
 
 class CaesarBot(Bot):
-	def __init__(self, sio):
-		super().__init__(sio, "caesarBot")
+	"""Caesar-shifts messages. Called with "!rotX <text>," where X is some integer."""
+	def __init__(self, socket_io):
+		"""The constructor for the bot.
+
+		Args:
+			socket_io (socketio.AsyncServer): The SocketIO server used internally by the bot to send messages.
+		"""
+		super().__init__(socket_io, "caesarBot")
 
 	async def on_chat_message(self, sid, msg, session):
 		# async with self.sio.session(sid) as session:
@@ -37,11 +49,11 @@ class CaesarBot(Bot):
 
 		# Accept !rot13, !rot22, !rot-20, etc.
 		if words[0][:4] == '!rot':
-			self.logger.info(words)
+			self.log_info(words)
 			try:
 				shift = int(words[0][4:])
 			except ValueError:
-				self.logger.warning(f"[CAESAR] caesarBot rejected command {words}")
+				self.log_warn(f"[CAESAR] caesarBot rejected command {words}")
 				await self.send_chat("Usage: “!rotX <text>,” where X is an integer without spaces or commas.")
 				return
 			cleartext = words[1]

@@ -4,13 +4,16 @@ import logging
 # Echo bot – sends back every message you send it.
 #TODO: Better variable names
 class EchoBot(Bot):
-	def __init__(self, sio):
-		super().__init__(sio, "echoBot")
+	"""A bot that sends the user's messages back to them.
 
-	# async def send_chat(self, msg, to=None):
-	# 	self.logger.info(f"[CHAT] echoBot: {msg}")
-	# 	return await self.sio.emit('chat', ('echoBot', msg), to=to)
-	
+	Attributes:
+	count (int): A count of the echo messages that have been sent so far.
+	"""
+	def __init__(self, sio):
+		"""Initialize the EchoBot. Counter starts at 0."""		
+		super().__init__(sio, "echoBot")
+		self.count = 0 # Counter: increments every time we send an echo message.
+
 	async def on_chat_message(self, sid, msg, session):
 		echo_enabled = session.get('echo', False)
 		# We would normally get this value like session['echo'],
@@ -23,14 +26,21 @@ class EchoBot(Bot):
 			# Turn False to True, and True to False.
 			session['echo'] = not echo_enabled
 
-			self.logger.info(f"Echo now {session['echo']} for {session.get('nick'), sid}")
+			self.log_info(f"Echo now {session['echo']} for {session.get('nick'), sid}")
 
 			await self.send_serverchat(f"echo toggled.", to=sid)
 			# Return early to avoid echoing `!echo`
 			return
 
+		if msg.strip() == "!echo info":
+			self.log_info(f"Reporting echo info for {session.get('nick'), sid}")
+			await self.send_serverchat(f"{self.count} echoes sent.", to=sid)
+			return
+
 		if echo_enabled:
 			# If the user has echo on, send their message back to them.
 			await self.send_chat(str(msg))
+			# Increment the counter.
+			self.count = self.count + 1
 
 bot = EchoBot
