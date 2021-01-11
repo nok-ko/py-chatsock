@@ -11,7 +11,7 @@ class EchoBot(Bot):
 	# 	self.logger.info(f"[CHAT] echoBot: {msg}")
 	# 	return await self.sio.emit('chat', ('echoBot', msg), to=to)
 	
-	async def on_chat_messageself, sid, msg, session):
+	async def on_chat_message(self, sid, msg, session):
 		echo_enabled = session.get('echo', False)
 		# We would normally get this value like session['echo'],
 		# but it might be undefined and raise a KeyError.

@@ -30,7 +30,7 @@ class CaesarBot(Bot):
 	def __init__(self, sio):
 		super().__init__(sio, "caesarBot")
 
-	async def on_chat_messageself, sid, msg, session):
+	async def on_chat_message(self, sid, msg, session):
 		# async with self.sio.session(sid) as session:
 		# Split up the message into !rotX and the remaining text
 		words = msg.strip().split(' ', 1)
