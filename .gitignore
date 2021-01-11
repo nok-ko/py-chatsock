@@ -1,3 +1,4 @@
 debug.log
 .vscode/settings.json
 bots/__pycache__/**
+venv/
