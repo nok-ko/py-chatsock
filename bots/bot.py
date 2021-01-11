@@ -19,5 +19,5 @@ class Bot():
 		self.logger.info(f"[SERVERCHAT]: {message}")
 		return await self.send_event('serverchat', message, to=to)
 
-	async def on_chat(self, session_id, message, session):
+	async def on_chat_messageself, session_id, message, session):
 		pass

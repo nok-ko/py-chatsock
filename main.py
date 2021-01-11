@@ -44,14 +44,19 @@ async def on_chat_message(sid, msg):
 
     # Here, session is read-only and will not update if we change it.
     session = await sio.get_session(sid)
-    logger.info(f"[CHAT] {session['nick']}: {msg}")
 
-    await sio.emit('chat', (session['nick'], str(msg)))
+    # `session` may be undefined, use `.get()` instead of `session[]` to always have a valid value.
+    nick = session.get('nick', 'UnnickedUser')
+    logger.info(f'[CHAT] {nick}: {msg}')
+
+    await sio.emit('chat', (nick, str(msg)))
 
     for bot in bot_modules:
-        # We allow bots without an on_chat method, hence getattr.
+        # We allow bots without an on_chat method, so we don't care
+        # if it's undefined or not since the Bot class implements 
+        # a default.
         async with sio.session(sid) as session:
-            await bot.on_chat(sid, msg, session)
+            await bot.on_chat_message(sid, msg, session)
 
 @sio.event
 def disconnect(sid):
