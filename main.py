@@ -72,9 +72,9 @@ if __name__ == '__main__':
 
     # Get command-line arguments, so we can specify the port 
     # the HTTP server should use.
-    parser = argparse.ArgumentParser(description="An HTTP/WebSockets chatbox!")
+    parser = argparse.ArgumentParser(description="An HTTP/WebSockets chat server!")
 
-    parser.add_argument("--port", type=int, default='7777')
+    parser.add_argument("port", type=int, help="The port number that the server should use.")
 
     # Log level command-line argument
     levels = ('DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL')
