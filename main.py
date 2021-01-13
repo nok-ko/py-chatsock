@@ -1,4 +1,5 @@
 import argparse
+import asyncio
 import importlib
 import logging
 import os
@@ -51,12 +52,11 @@ async def on_chat_message(sid, msg):
 
     await sio.emit('chat', (nick, str(msg)))
 
-    for bot in bot_modules:
-        # We allow bots without an on_chat method, so we don't care
-        # if it's undefined or not since the Bot class implements 
-        # a default.
-        async with sio.session(sid) as session:
-            await bot.on_chat_message(sid, msg, session)
+    # We allow bots without an on_chat method, so we don't care
+    # if it's undefined or not since the Bot class implements 
+    # a default.
+    async with sio.session(sid) as session:
+        await asyncio.gather(*[bot.on_chat_message(sid, msg, session) for bot in bots])
 
 @sio.event
 def disconnect(sid):
@@ -112,7 +112,7 @@ if __name__ == '__main__':
     )
 
     # Look through the `bots` directory and load every python module.
-    bot_modules = []
+    bots = []
     for filename in os.listdir(pathlib.Path.cwd().joinpath("bots")):
         # *Not at all* a reliable check for python files. Good enough, however.
         if ".py" in filename and filename != 'bot.py': 
@@ -129,7 +129,7 @@ if __name__ == '__main__':
             bot_class = getattr(bot_module, 'bot')
             if bot_class:
                 bot = bot_class(sio)
-                bot_modules.append(bot)
+                bots.append(bot)
             else:
                 logger.error(f"Bot in {filename} has no `bot` variable!")
 
