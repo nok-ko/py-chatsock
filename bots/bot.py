@@ -18,6 +18,7 @@ class Bot():
 			socketio (socketio.AsyncServer): The SocketIO server used internally by the bot to send messages.
 			name (str): The name of this chatbot – used in the logging functions and when sending chat messages.
 		"""
+		name = name or self.__class__.__name__ # decent fallback name
 		self.logger = logging.getLogger(name)
 		self.logger.setLevel(logging.INFO)
 
@@ -67,7 +68,7 @@ class Bot():
 
 		return await self.socketio.emit(event_name, data, to=to)
 
-	async def send_chat(self, message, to=None):
+	async def send_chat(self, message, to=None, from_=None):
 		"""Send a chat message, optionally to a specific client or room.
 
 		Args:
@@ -77,10 +78,14 @@ class Bot():
 			to (str, optional): The recipient of the message.
 				Can be a user’s session ID or a room ID.
 				Defaults to None, broadcasting to every connected client.
+			to (str, optional): The sender of the message.
+				Just a string, can be anything.
+				If set to None, defaults to self.name.
 		Returns:
 			None
 		"""
-		return await self.send_event('chat', (self.name, message), to=to, log=message)
+		from_ = from_ or self.name # If from_ is None, set to the bot's name.
+		return await self.send_event('chat', (from_, message), to=to, log=message)
 
 	async def send_serverchat(self, message, to=None):
 		"""Send a chat message as “the server,” optionally to a specific client or room.
