@@ -5,6 +5,14 @@ from .bot import Bot
 
 class DiscordBridgeBot(Bot):
 	def __init__(self, socket_io):
+
+		# Briefly block the thread to read the token.
+		# It's okay because __init__ is called before
+		# the main loop starts.
+		# TODO: Error handling
+		with open('bots/discord.secret') as token_file:
+			self.token = token_file.readline()
+
 		super().__init__(socket_io, None)
 
 		self.client = discord.Client()
@@ -33,8 +41,8 @@ class DiscordBridgeBot(Bot):
 	async def on_chat_message(self, session_id, message, session):
 		if message == "!login":
 			async def login_task():
-				await self.client.login() #TODO: Token loading code
 				await self.send_chat("Logging in...")
+				await self.client.login(self.token)
 				await self.client.connect()
 
 			loop = asyncio.get_event_loop()
